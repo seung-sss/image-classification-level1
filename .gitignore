@@ -1,0 +1,9 @@
+# ETC
+**/.ipynb_checkpoints
+**/__pycache__
+**/._**
+._**
+.DS_**
+
+# dataset
+input/*
