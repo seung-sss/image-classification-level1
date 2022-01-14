@@ -7,3 +7,6 @@
 
 # dataset
 input/*
+
+# saved
+saved/*
