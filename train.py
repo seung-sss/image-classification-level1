@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import argparse
 import yaml
 from importlib import import_module
@@ -39,7 +41,11 @@ def run(args, cfg, device):
     model = model_module(num_classes = cfg['model']['class']).to(device)
     
     # Loss function 설정
-    criterion = create_criterion(cfg['criterion']['name'])
+    if cfg['criterion']['weight']:
+        class_weights = torch.FloatTensor(cfg['criterion']['weight'])
+        criterion = create_criterion(cfg['criterion']['name'], weight=class_weights)
+    else:
+        criterion = create_criterion(cfg['criterion']['name'])
 
     # Optimizer 설정
     opt_module = getattr(import_module("torch.optim"), cfg['optimizer']['name'])
@@ -70,7 +76,7 @@ def run(args, cfg, device):
             best_f1 = metrics[2]
 
             checkpoint = model.state_dict()
-            save_model(checkpoint, os.path.join(cfg['saved_dir'], f"best_model.pth"))
+            save_model(checkpoint, os.path.join(cfg['saved_dir'], "best_model.pt"))
     
     print('Execution time:', '{:5.2f}'.format(time.time() - start_time), 'seconds')
 
